@@ -1,14 +1,10 @@
-﻿// import { resolve } from 'url';
-
-// const util = require('util');
+﻿
 const url = require('url')
 // const querystring = require('querystring')
 // const optFile = require('./modules/optFile')
 const resEnd = require('./modules/end')
 const OptPool = require('./modules/optPool')
-// const async = require('async')
 
-// const stat = util.promisify(fs.stat)
 const optPool = new OptPool()
 const pool = optPool.getPool()
 
@@ -20,9 +16,8 @@ module.exports = {
     })
     req.on('end', () => {
       post = JSON.parse(post)
-      // 使用promise start
+      /* 使用promise start */
       
-     
       // promise 链接数据库
       const getConnectionPro = (resolve, reject) => {
         pool.getConnection((err, conn) => {
@@ -32,7 +27,8 @@ module.exports = {
       // promise 查询数据库
       const queryPro = (conn) => (resolve, reject) => {
         const sql = 'SELECT * from user where uname=? and pwd=?'
-        conn.query(sql, [post.username, post.password], (err, rs) => {
+        const param = [post.username, post.password]
+        conn.query(sql, param, (err, rs) => {
           resolve({ conn: conn, rs: rs })
         })
       }
@@ -40,8 +36,7 @@ module.exports = {
       new Promise(getConnectionPro)
         .then(conn => new Promise(queryPro(conn)))
         .then(arg => {
-          const rs = arg.rs
-          const conn = arg.conn
+          const rs = arg.rs, conn = arg.conn
           if(rs.length){ // 匹配结果
             resEnd(res, { token: post.username }, { status: 1, msg: '用户名密码匹配，登录成功' })
           } else {
@@ -52,16 +47,7 @@ module.exports = {
         .catch(e => {
           console.log(e)
         })
-      
-      // promise end
-
-      /* 使用async start */
-      // async function asyncSql() {
-      //   const a = await stat('.');
-      // }
-      /* 使用async end */
-
-      
+      /* 使用promise end */
 
       //执行SQL语句
       /* pool.getConnection((err, conn) => {

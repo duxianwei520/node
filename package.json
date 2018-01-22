@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "this a node demo",
   "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
   "dependencies": {
     "async": "^2.6.0",
     "mysql": "^2.15.0",
@@ -13,7 +10,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node index.js"
+    "start": "node ./src/index.js"
   },
   "author": "duxiaodu",
   "license": "ISC"
