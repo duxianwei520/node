@@ -17,7 +17,6 @@ module.exports = {
     req.on('end', () => {
       post = JSON.parse(post)
       /* 使用promise start */
-      
       // promise 链接数据库
       const getConnectionPro = (resolve, reject) => {
         pool.getConnection((err, conn) => {
@@ -32,6 +31,15 @@ module.exports = {
           resolve({ conn: conn, rs: rs })
         })
       }
+      /* const queryPro = function (conn){
+        return function (resolve, reject){
+          const sql = 'SELECT * from user where uname=? and pwd=?'
+          const param = [post.username, post.password]
+          conn.query(sql, param, (err, rs) => {
+            resolve({ conn: conn, rs: rs })
+          })
+        }
+      } */
       // 执行promise队列
       new Promise(getConnectionPro)
         .then(conn => new Promise(queryPro(conn)))
